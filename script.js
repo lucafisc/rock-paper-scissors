@@ -1,5 +1,20 @@
 let computerSelection;
-let playerSelection = "rock";
+let playerSelection;
+
+function playerPlay() {
+  while (true) {
+    let userInput = prompt("Choose between Rock, paper or scissors!");
+    playerSelection = userInput.toLowerCase();
+    if (
+      (playerSelection === "rock") |
+      (playerSelection === "paper") |
+      (playerSelection === "scissors")
+    ) {
+      break;
+    }
+  }
+  return playerSelection;
+}
 
 function computerPlay() {
   computerRandomNumber = Math.floor(Math.random() * 3);
@@ -19,12 +34,11 @@ function computerPlay() {
   return computerSelection;
 }
 
-
 function playRound() {
-    computerSelection = computerPlay();
-      playerSelection.toLowerCase();
-
+  computerSelection = computerPlay();
+  playerSelection = playerPlay();
   let roundMessage;
+
   if (playerSelection == computerSelection) {
     roundMessage = "It's a tie!";
   } else if (playerSelection !== computerSelection) {
@@ -58,7 +72,14 @@ function playRound() {
     }
   }
   console.log(roundMessage);
-  
 }
- 
+
+function game() {
+  for (let i = 0; i < 5; i++) {
+    playRound();
+  }
+}
+
 playRound();
+
+/*game();*/
