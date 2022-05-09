@@ -11,8 +11,8 @@ function playerPlay() {
     let userInput = prompt("Choose between Rock, paper or scissors!");
     playerSelection = userInput.toLowerCase();
     if (
-      (playerSelection === "rock") |
-      (playerSelection === "paper") |
+      (playerSelection === "rock") ||
+      (playerSelection === "paper") ||
       (playerSelection === "scissors")
     ) {
       break;
@@ -40,72 +40,93 @@ function computerPlay() {
   return computerSelection;
 }
 
-/*Add 1 point to player's score*/
+/*Add 1 point to player's score and display victory message*/
 function playerGetsPoint() {
   playerScore++;
+  roundMessage = `${playerSelection} beats ${computerSelection}. You won!`;
+  console.log(roundMessage);
 }
-/*Add 1 point to computers's score*/
+/*Add 1 point to computers's score and display defeat message*/
 function computerGetsPoint() {
   computerScore++;
+  roundMessage = `${computerSelection} beats ${playerSelection}. You lost!`;
+  console.log(roundMessage);
 }
 
 /*Decide who won current round*/
 function playRound() {
-  computerSelection = computerPlay();
   playerSelection = playerPlay();
+  computerSelection = computerPlay();
   let roundMessage;
 
   if (playerSelection == computerSelection) {
     roundMessage = "It's a tie!";
+    console.log(roundMessage);
   } else if (playerSelection !== computerSelection) {
     if (computerSelection == "rock") {
       switch (playerSelection) {
         case "paper":
-          roundMessage = `${playerSelection} beats ${computerSelection}. You won!`;
           playerGetsPoint();
           break;
         case "scissors":
-          roundMessage = `${computerSelection} beats ${playerSelection}. You lost!`;
           computerGetsPoint();
           break;
       }
     } else if (computerSelection == "paper") {
       switch (playerSelection) {
         case "scissors":
-          roundMessage = `${playerSelection} beats ${computerSelection} You won!`;
           playerGetsPoint();
           break;
         case "rock":
-          roundMessage = `${computerSelection} beats ${playerSelection} You lost!`;
           computerGetsPoint();
           break;
       }
     } else if (computerSelection == "scissors") {
       switch (playerSelection) {
         case "rock":
-          roundMessage = `${playerSelection} beats ${computerSelection} You won!`;
           playerGetsPoint();
           break;
         case "paper":
-          roundMessage = `${computerSelection} beats ${playerSelection} You lost!`;
           computerGetsPoint();
           break;
       }
     }
   }
-  console.log(roundMessage);
+
 }
 
 /*Stop the game when either user or computer has 5 points*/
 function game() {
-  do {
-    playRound();
-    console.log(
-      `Player Score = ${playerScore}. Computer Score = ${computerScore}`
-    );
-  } while (playerScore <= 5 || computerScore <= 5);
 
-  console.log("Game Over!");
+  while (true) {
+    playRound();
+    console.log(`Player Score = ${playerScore}. Computer Score = ${computerScore}`);
+
+    if (playerScore === 5) {
+      console.log("Congratulations, you won!✌️")
+      break;
+    }
+     else if (computerScore === 5){
+      console.log("Game over. Better luck next time!🥲")
+      break;
+     }
+   
+    }
+
+    restartGame();
+}
+
+/*Restart the game and reset the scores*/
+function restartGame() {
+ let newGame = confirm("Play again?")
+ if (newGame) {
+   playerScore = 0;
+   computerScore = 0;
+   game();
+ }
+ else {
+   console.log("See you next time!")
+ }
 }
 
 game();
