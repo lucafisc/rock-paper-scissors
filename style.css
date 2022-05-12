@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Belleza&display=swap');
+
+
+* {
+    font-family: 'Belleza', sans-serif;
+    margin: 0;
+}
+.vl {
+    border-left: 2px solid #f93f7d;
+  height: 100vh;
+}
+
+.container {
+    display: flex;
+    margin: 0 auto;
+    max-width: 1500px;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+}
+
+.card {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    flex: 1;
+    /* background-color: blueviolet; */
+    text-align: center;
+    height: 100vh;
+}
+
+
+/* body {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+	height: 100vh;
+}*/
+
+
+
+
+/* .scoreme {
+    animation: gradient 3s;
+    animation-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    animation-iteration-count: 1;
+	height: 100vh;
+}
+
+@keyframes gradient {
+	0% {
+        background: linear-gradient(0deg, rgba(249,63,125,0) 0%, rgba(255,255,255,0.5018601190476191) 0%, rgba(255,255,255,0) 100%);	}
+	50% {
+        background: linear-gradient(0deg, rgba(249,63,125,0) 0%, rgba(249,63,125,0.5018601190476191) 0%, rgba(249,63,125,0) 100%);
+	}
+	100% {
+        background: linear-gradient(0deg, rgba(249,63,125,0) 0%, rgba(255,255,255,0.5018601190476191) 0%, rgba(255,255,255,0) 100%);} 
+
+    } */
+        .selection-text {
+    font-size: 100px;
+    text-decoration: none;
+    color: #f93f7d;
+    padding: 20px;
+    transition: transform .5s ease-in-out;
+
+}
+
+.user-choice:hover {
+    color: #76f176 ;
+    cursor: pointer;
+    transform: rotate(-5deg);
+   }
+   
+
+img {
+    transition: transform .7s ease-in-out;
+  }
+  img:hover {
+    transform: rotate(360deg);
+  }
+
+.computer-choice {
+    color: rgb(222, 222, 222);
+}
+
+
+.blink-me {
+    animation: blinker 0.2s;
+    animation-iteration-count: 7;
+  }
+  
+  @keyframes blinker {  
+    25% { color: #f93f7d; }
+    75% { color: #f93f7d; }
+  }
+
+.score {
+    font-size: 50px;
+    color: #f93f7d;
+    margin-top: 80px;
+}
+
+.infoboard {
+    margin-bottom: 80px;
+    font-size: 30px;
+    color: #f93f7d;
+}

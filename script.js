@@ -1,67 +1,80 @@
 /*Declare global variables*/
-
+let myPoints = 0;
+let computerPoints = 0;
 let computerSelection;
 let playerSelection;
-let playerScore = 0;
 let computerScore = 0;
+const buttons = document.getElementsByClassName("user-choice");
 
-/*Ask for user input and check if it is rock, paper or scissors*/
-function playerPlay() {
-  while (true) {
-    let userInput = prompt("Choose between Rock, paper or scissors!");
-    playerSelection = userInput.toLowerCase();
-    if (
-      (playerSelection === "rock") ||
-      (playerSelection === "paper") ||
-      (playerSelection === "scissors")
-    ) {
-      break;
-    }
+//Ask for user input and return it
+function playerPlay(e) {
+  if (e.target.id === "rock") {
+    playerSelection = "rock";
+  } else if (e.target.id === "paper") {
+    playerSelection = "paper";
+  } else {
+    playerSelection = "scissors";
   }
+
+  // let playerChoice = document.querySelector(`div[id="${playerSelection}"`);
+  // playerChoice.classList.add("user-choice");
+  // playerChoice.addEventListener("animationend", () => {
+  //   playerChoice.classList.remove("user-choice");
+  // });
+
   return playerSelection;
 }
 
-/*Make computer randomly choose between rock, paper or scissors and print the result*/
-function computerPlay() {
+//Return and animate computer choice
+function computerPlay(e) {
   computerRandomNumber = Math.floor(Math.random() * 3);
+  let selector;
 
   switch (computerRandomNumber) {
     case 0:
       computerSelection = "rock";
+      selector = "computer-rock";
       break;
     case 1:
       computerSelection = "paper";
+      selector = "computer-paper";
       break;
     case 2:
       computerSelection = "scissors";
+      selector = "computer-scissors";
       break;
   }
-  console.log(`Computer chooses ${computerSelection}`);
+  //Animate computer choice
+  animateComputer();
+
   return computerSelection;
+
+  function animateComputer() {
+    let computerBlink = document.querySelector(`div[id="${selector}"`);
+    computerBlink.classList.add("blink-me");
+    computerBlink.addEventListener("animationend", () => {
+      computerBlink.classList.remove("blink-me");
+    });
+  }
 }
 
-/*Add 1 point to player's score and display victory message*/
-function playerGetsPoint() {
-  playerScore++;
-  roundMessage = `${playerSelection} beats ${computerSelection}. You won!`;
-  console.log(roundMessage);
-}
-/*Add 1 point to computers's score and display defeat message*/
-function computerGetsPoint() {
-  computerScore++;
-  roundMessage = `${computerSelection} beats ${playerSelection}. You lost!`;
-  console.log(roundMessage);
+//Add event listener for buttons
+for (const btn of buttons) {
+  btn.addEventListener("click", (e) => {
+    playerPlay(e);
+    computerPlay(e);
+    playRound();
+  });
 }
 
 /*Decide who won current round*/
 function playRound() {
-  playerSelection = playerPlay();
-  computerSelection = computerPlay();
+  // playerSelection = playerPlay(e);
+  // computerSelection = computerPlay(e);
   let roundMessage;
 
   if (playerSelection == computerSelection) {
-    roundMessage = "It's a tie!";
-    console.log(roundMessage);
+    tieHappened();
   } else if (playerSelection !== computerSelection) {
     if (computerSelection == "rock") {
       switch (playerSelection) {
@@ -92,25 +105,84 @@ function playRound() {
       }
     }
   }
+}
+
+// /*Add 1 point to player's score and display victory message*/
+function playerGetsPoint(e) {
+
+  let winAudio = document.getElementById("win");
+  winAudio.currentTime = 0;
+  winAudio.play();
+  
+  let playerScore = document.getElementById("myscore");
+  myPoints ++
+  playerScore.textContent = myPoints;
+  
+  let infoBoard = document.getElementById("my-infoboard");
+  infoBoard.textContent = `${playerSelection} beats ${computerSelection}. You won!`;
+  setTimeout(() => {
+    infoBoard.textContent = "me";
+  }, 1400);
+
+}
+/*Add 1 point to computers's score and display defeat message*/
+function computerGetsPoint() {
+
+  let looseAudio = document.getElementById("loose");
+  looseAudio.currentTime = 0;
+  looseAudio.play();
+
+  let computerScore = document.getElementById("computer-score");
+  computerPoints ++
+  computerScore.textContent = computerPoints
+
+  let infoBoardC = document.getElementById("computer-infoboard");
+  infoBoardC.textContent = `${computerSelection} beats ${playerSelection}. You lost!`;
+  setTimeout(() => {
+    infoBoardC.textContent = "enemy";
+  }, 1400);
+
+ 
+  console.log(roundMessage);
+}
+
+
+function tieHappened() {
+  let audioName = document.getElementById('tie');
+  audioName.currentTime = 0;
+  audioName.play();
+
+  let infoBoard = document.getElementById("my-infoboard");
+  infoBoard.textContent = `a tie!`;
+  setTimeout(() => {
+    infoBoard.textContent = "me";
+  }, 1400);
+
+  let infoBoardC = document.getElementById("computer-infoboard");
+  infoBoardC.textContent = `a tie!`;
+  setTimeout(() => {
+    infoBoardC.textContent = "enemy";
+  }, 1400);
 
 }
 
-/*Stop the game when either user or computer has 5 points*/
+
+
+
+// /*Stop the game when either user or computer has 5 points*/
 function game() {
 
   while (true) {
-    playRound();
-    console.log(`Player Score = ${playerScore}. Computer Score = ${computerScore}`);
 
-    if (playerScore === 5) {
+    if (myPoints === 5) {
       console.log("Congratulations, you won!✌️")
       break;
     }
-     else if (computerScore === 5){
+     else if (computerPoints === 5){
       console.log("Game over. Better luck next time!🥲")
       break;
      }
-   
+
     }
 
     restartGame();
@@ -129,4 +201,4 @@ function restartGame() {
  }
 }
 
-game();
+
