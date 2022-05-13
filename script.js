@@ -4,10 +4,19 @@ let computerPoints = 0;
 let computerSelection;
 let playerSelection;
 let computerScore = 0;
-const buttons = document.getElementsByClassName("user-choice");
+
+//Hide gameover screen
+function startGame() {
+  let startScreen = document.getElementById("startgame");
+  let endScreen = document.getElementById("gameover");
+  startScreen.style.display = "flex";
+  endScreen.style.display = "none";
+}
+
+startGame();
 
 //Ask for user input and return it
-function playerPlay(e) {
+function playerInput(e) {
   if (e.target.id === "rock") {
     playerSelection = "rock";
   } else if (e.target.id === "paper") {
@@ -15,64 +24,50 @@ function playerPlay(e) {
   } else {
     playerSelection = "scissors";
   }
-
-  // let playerChoice = document.querySelector(`div[id="${playerSelection}"`);
-  // playerChoice.classList.add("user-choice");
-  // playerChoice.addEventListener("animationend", () => {
-  //   playerChoice.classList.remove("user-choice");
-  // });
-
   return playerSelection;
 }
-
 //Return and animate computer choice
-function computerPlay(e) {
+function computerInput(e) {
   computerRandomNumber = Math.floor(Math.random() * 3);
-  let selector;
 
   switch (computerRandomNumber) {
     case 0:
       computerSelection = "rock";
-      selector = "computer-rock";
       break;
     case 1:
       computerSelection = "paper";
-      selector = "computer-paper";
       break;
     case 2:
       computerSelection = "scissors";
-      selector = "computer-scissors";
       break;
   }
-  //Animate computer choice
-  animateComputer();
-
   return computerSelection;
-
-  function animateComputer() {
-    let computerBlink = document.querySelector(`div[id="${selector}"`);
-    computerBlink.classList.add("blink-me");
-    computerBlink.addEventListener("animationend", () => {
-      computerBlink.classList.remove("blink-me");
-    });
-  }
 }
-
-//Add event listener for buttons
-for (const btn of buttons) {
-  btn.addEventListener("click", (e) => {
-    playerPlay(e);
-    computerPlay(e);
-    playRound();
+//Animate computer choice
+function animateComputer() {
+  let computerBlink = document.querySelector(
+    `div[data-selector="${computerSelection}"`
+  );
+  computerBlink.classList.add("blink-me");
+  computerBlink.addEventListener("animationend", () => {
+    computerBlink.classList.remove("blink-me");
   });
 }
 
-/*Decide who won current round*/
-function playRound() {
-  // playerSelection = playerPlay(e);
-  // computerSelection = computerPlay(e);
-  let roundMessage;
+//Add event listener for buttons
+const buttons = document.getElementsByClassName("user-choice");
+for (const btn of buttons) {
+  btn.addEventListener("click", (e) => {
+    playerInput(e);
+    computerInput(e);
+    animateComputer();
+    playRound();
+    checkScore();
+  });
+}
 
+//Decide who won current round
+function playRound() {
   if (playerSelection == computerSelection) {
     tieHappened();
   } else if (playerSelection !== computerSelection) {
@@ -107,34 +102,36 @@ function playRound() {
   }
 }
 
-// /*Add 1 point to player's score and display victory message*/
+//Add 1 point to player's score and display victory message
 function playerGetsPoint(e) {
-
+  myPoints++;
   let winAudio = document.getElementById("win");
   winAudio.currentTime = 0;
   winAudio.play();
-  
-  let playerScore = document.getElementById("myscore");
-  myPoints ++
-  playerScore.textContent = myPoints;
-  
+
+  updatePlayerScore();
+
   let infoBoard = document.getElementById("my-infoboard");
   infoBoard.textContent = `${playerSelection} beats ${computerSelection}. You won!`;
   setTimeout(() => {
     infoBoard.textContent = "me";
   }, 1400);
 
+  return myPoints;
 }
-/*Add 1 point to computers's score and display defeat message*/
-function computerGetsPoint() {
+function updatePlayerScore() {
+  let playerScore = document.getElementById("myscore");
 
+  playerScore.textContent = myPoints;
+}
+
+//Add 1 point to computers's score and display defeat message
+function computerGetsPoint() {
   let looseAudio = document.getElementById("loose");
   looseAudio.currentTime = 0;
   looseAudio.play();
-
-  let computerScore = document.getElementById("computer-score");
-  computerPoints ++
-  computerScore.textContent = computerPoints
+  computerPoints++;
+  updateComputerScore();
 
   let infoBoardC = document.getElementById("computer-infoboard");
   infoBoardC.textContent = `${computerSelection} beats ${playerSelection}. You lost!`;
@@ -142,13 +139,16 @@ function computerGetsPoint() {
     infoBoardC.textContent = "enemy";
   }, 1400);
 
- 
-  console.log(roundMessage);
+  return computerPoints;
 }
+function updateComputerScore() {
+  let computerScore = document.getElementById("computer-score");
 
-
+  computerScore.textContent = computerPoints;
+}
+//Display tie and continue game
 function tieHappened() {
-  let audioName = document.getElementById('tie');
+  let audioName = document.getElementById("tie");
   audioName.currentTime = 0;
   audioName.play();
 
@@ -163,42 +163,37 @@ function tieHappened() {
   setTimeout(() => {
     infoBoardC.textContent = "enemy";
   }, 1400);
-
 }
-
-
-
-
-// /*Stop the game when either user or computer has 5 points*/
-function game() {
-
-  while (true) {
-
-    if (myPoints === 5) {
-      console.log("Congratulations, you won!✌️")
-      break;
-    }
-     else if (computerPoints === 5){
-      console.log("Game over. Better luck next time!🥲")
-      break;
-     }
-
-    }
-
-    restartGame();
+//Check if someone won
+function checkScore() {
+  if (myPoints >= 5 || computerPoints >= 5) {
+    gameOver();
+  }
 }
+//Stop game, reset score and show gameover screen
+function gameOver() {
+  let startScreen = document.getElementById("startgame");
+  let endScreen = document.getElementById("gameover");
+  startScreen.style.display = "none";
+  endScreen.style.display = "flex";
+  let gameMessage = document.getElementById("endgame-message");
+  let gameSubText = document.getElementById("endgame-subtext");
 
-/*Restart the game and reset the scores*/
-function restartGame() {
- let newGame = confirm("Play again?")
- if (newGame) {
-   playerScore = 0;
-   computerScore = 0;
-   game();
- }
- else {
-   console.log("See you next time!")
- }
+  if (myPoints > computerPoints) {
+    gameMessage.textContent = "You won!";
+    gameSubText.textContent = "congratulations!";
+  } else {
+    gameMessage.textContent = "You lost!";
+    gameSubText.textContent = "better luck next time";
+  }
+
+  myPoints = 0;
+  computerPoints = 0;
+  updatePlayerScore();
+  updateComputerScore();
 }
-
-
+//Play again button
+let playAgain = document.getElementById("new-game-btn");
+playAgain.addEventListener("click", () => {
+  startGame();
+});
